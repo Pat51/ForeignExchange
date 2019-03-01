@@ -1,6 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using ForeignExchange.Views;
 
 namespace ForeignExchange
 {
@@ -10,7 +11,7 @@ namespace ForeignExchange
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new MainView();
         }
 
         protected override void OnStart()
