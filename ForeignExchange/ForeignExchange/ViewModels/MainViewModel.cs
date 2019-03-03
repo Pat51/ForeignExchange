@@ -1,6 +1,8 @@
 ﻿namespace ForeignExchange.ViewModels
 {
+    using GalaSoft.MvvmLight.Command;
     using Models;
+    using System;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
@@ -16,9 +18,10 @@
         }
 
         public ObservableCollection<Rate> Rates
-            { get; 
+        {
+            get;
             set;
-            }
+        }
 
         public Rate SourceRate
         {
@@ -41,8 +44,8 @@
         {
             get;
 
-             set;
-            }
+            set;
+        }
 
         public string Result
         {
@@ -59,23 +62,22 @@
         }
 
         #region Commands
-
         public ICommand ConvertCommand
         {
             get
             {
-               return new RelayCommand(Convert);
-                
+                return new RelayCommand(ConvertMoney);
             }
-
         }
-         void Convert()
+
+         void ConvertMoney()
         {
-
+            throw new NotImplementedException();
         }
-        
-        
+
         #endregion
+
+
     }
 }
 

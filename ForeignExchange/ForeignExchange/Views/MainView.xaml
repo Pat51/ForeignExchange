@@ -6,7 +6,7 @@
     <ContentPage.Content>
         <StackLayout
             
-            Padding="20,30,20,10">
+            Padding="10">
             <Label Text="Foreign Exchange"
                        FontSize="Large"
                        FontAttributes="Bold"
@@ -48,12 +48,12 @@
             <Button 
                    Command="{Binding ConvertCommand}"
                    Text="Convertir"
+                   TextColor="White"
                     BackgroundColor="Navy"
                     BorderRadius="25"
                     HeightRequest="50"
                     FontAttributes="Bold"
-                    IsEnabled="{Binding IsEnabled,Mode=TwoWay}"
-                    TextColor="White">
+                    IsEnabled="{Binding IsEnabled,Mode=TwoWay}">
              </Button>
             <Label
                 BackgroundColor="Silver"
