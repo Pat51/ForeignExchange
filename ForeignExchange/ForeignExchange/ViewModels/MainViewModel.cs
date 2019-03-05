@@ -9,6 +9,7 @@
     using System.ComponentModel;
     using System.Net.Http;
     using System.Windows.Input;
+    using System.Reflection;
 
 
 
@@ -28,7 +29,7 @@
         private bool isEnabled;
 
        
-        string _result;
+        
         #endregion
 
 
@@ -53,124 +54,156 @@
 
         
 
-        public Rate SourceRate
+        public double SourceRate
         {
-            get;
-            set;
+            set
+            {
+                if (sourceRate != value)
+                {
+                    sourceRate = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SourceRate"));
+                }
+            }
+            get => sourceRate;
+
 
         }
 
-        public Rate TargetRate
+        public double TargetRate
         {
-            get;
-            set;
+            set
+            {
+                if (targetRate != value)
+                {
+                    targetRate = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TargetRate"));
+                }
+            }
+            get
+            {
+                return targetRate;
+            }
+
         }
         public bool IsRunning
         {
+
+            set
+            {
+                if (isRunning != value)
+                {
+                    isRunning = value;
+                    PropertyChanged?.Invoke(this,
+                        new PropertyChangedEventArgs("IsRunning"));
+                }
+            }
+
             get
             {
                 return isRunning;
-            }
-            set
-            {
-                if(isRunning !=value)
-                {
-                    isRunning = value;
-                    PropertyChanged?.Invoke(
-                        this,
-                        new PropertyChangedEventArgs(nameof (IsRunning)));
-                }
+
             }
         }
+        
         public bool IsEnabled
         {
-            get
-            {
-                return isEnabled;
-            }
+            
             set
             {
                 if (isEnabled != value)
                 {
                     isEnabled = value;
                     PropertyChanged?.Invoke(
-                        this,
-                        new PropertyChangedEventArgs(nameof(IsEnabled)));
+                        this,new PropertyChangedEventArgs("IsEnabled"));
                 }
             }
-        }
-
-        public string Result
-        {
             get
             {
-                return _result;
+                return isEnabled;
             }
-            set
-            {
-                if (_result != value)
-                {
-                    _result = value;
-                    PropertyChanged?.Invoke(
-                        this,
-                        new PropertyChangedEventArgs(nameof(Result)));
-                }
-            }
+
         }
+
+        
+            
+        
 
 
         #endregion
         public MainViewModel()
         {
+            Rates = new ObservableCollection<Rate>();
+            IsEnabled = false;
             LoadRates();
+
         }
 
-        
+
 
         #region Metodos
-        async void LoadRates()
-        {
-            IsRunning = true;
-            Result = "Loading Rates....";
 
+        private async void LoadRates()
+        {
+            isRunning = true;
             try
             {
                 var client = new HttpClient();
-                client.BaseAddress = new 
+                client.BaseAddress = new
                     Uri("https://openexchangerates.org");
-                var url = "/api/latest.json?app_id=f490efbcd52d48ee98fd62cf33c47b9e";
+                var url = "/api/latest.json?app_id=57658348f64f4d0a8ba9b21ef5912545";
                 var response = await client.GetAsync(url);
-                var result = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
-                    IsRunning = false;
-                    Result = result;
+                    await App.Current.MainPage.DisplayAlert("Error", response.StatusCode.ToString(), "Aceptar");
+                    isRunning = false;
+                    return;
                 }
 
-                var rates = JsonConvert.DeserializeObject<List<Rate>>(result);
-                Rates = new ObservableCollection<Rate>(rates);
-
-                IsRunning = false;
-                IsEnabled = true;
-                Result = "Ready to convert";
+                var result = await response.Content.ReadAsStringAsync();
+                exchangeRates = JsonConvert.DeserializeObject<ExchangeRates>(result);
             }
             catch (Exception ex)
             {
+                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar");
                 IsRunning = false;
-                Result = ex.Message;
+                IsEnabled = false;
+                return;
+
             }
-
-
+            LoadRates();
+            IsRunning = false;
+            IsEnabled = true;
 
         }
-
-        #endregion
-
+    }
 
 
+   /* private async void GetRates()
+    {
+        Rates.Clear();
+        var type = typeof(Rates);
+        var properties = type.GetRuntimeFields();
 
-        #region Commands
-        public ICommand ConvertCommand
+        foreach (var property in properties)
+        {
+            var code = property.Name.Substring(1, 3);
+            Rates.Add(new Rate
+            {
+                Code = code,
+                TaxRate = (double)property.GetValue(exchangeRates.Rates),
+            });
+        }
+
+
+    }
+
+    #endregion
+
+
+
+
+    #region Commands
+    public ICommand ConvertCommand
         {
             get
             {
@@ -182,10 +215,10 @@
         {
             throw new NotImplementedException();
         }
-
+        */
         #endregion
 
-
+    
     }
-}
+
 
