@@ -1,7 +1,7 @@
 ﻿namespace ForeignExchange.ViewModels
 {
+    using ForeignExchange.Clases;
     using GalaSoft.MvvmLight.Command;
-    using Models;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -20,39 +20,38 @@
         #endregion
 
         #region Atributos
+        private ExchangeRates exchangeRates;
+        private bool isRunning;
+        private decimal amount;
+        private double sourceRate;
+        private double targetRate;
+        private bool isEnabled;
 
-        bool _isRunning;
-        bool _isEnabled;
-        
-        ObservableCollection<Rate> _rates;
+       
         string _result;
         #endregion
 
 
         #region Properties
-        public string Amount
+        public ObservableCollection<Rate> Rates { get; set; }
+        public decimal Amount
         {
-            get;
-            set;
-        }
-
-        public ObservableCollection<Rate> Rates
-        {
-            get
-            {
-                return _rates;
-            }
             set
             {
-                if (_rates != value)
+                if (amount != value)
                 {
-                    _rates = value;
-                    PropertyChanged?.Invoke(
-                        this,
-                        new PropertyChangedEventArgs(nameof(Rates)));
+                    amount = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Amount"));
                 }
             }
+            get
+            {
+                return amount;
+            }
+
         }
+
+        
 
         public Rate SourceRate
         {
@@ -70,13 +69,13 @@
         {
             get
             {
-                return _isRunning;
+                return isRunning;
             }
             set
             {
-                if(_isRunning !=value)
+                if(isRunning !=value)
                 {
-                    _isRunning = value;
+                    isRunning = value;
                     PropertyChanged?.Invoke(
                         this,
                         new PropertyChangedEventArgs(nameof (IsRunning)));
@@ -87,13 +86,13 @@
         {
             get
             {
-                return _isEnabled;
+                return isEnabled;
             }
             set
             {
-                if (_isEnabled != value)
+                if (isEnabled != value)
                 {
-                    _isEnabled = value;
+                    isEnabled = value;
                     PropertyChanged?.Invoke(
                         this,
                         new PropertyChangedEventArgs(nameof(IsEnabled)));
