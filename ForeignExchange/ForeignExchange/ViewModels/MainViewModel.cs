@@ -124,15 +124,36 @@
 
         }
 
-        
-            
-        
+        public string Message
+        {
+
+            set
+            {
+                if (message != value)
+                {
+                    message= value;
+                    PropertyChanged?.Invoke(
+                        this, new PropertyChangedEventArgs("Message"));
+                }
+            }
+            get
+            {
+                return message;
+            }
+
+        }
+
+
+
+
 
 
         #endregion
         public MainViewModel()
         {
             Rates = new ObservableCollection<Rate>();
+
+            Message = "Ingrese una cantidad, seleccione una moneda fuente, seleccione una moneda de conversion";
             IsEnabled = false;
             LoadRates();
 
@@ -175,50 +196,56 @@
             IsEnabled = true;
 
         }
-    }
-
-
-   /* private async void GetRates()
-    {
-        Rates.Clear();
-        var type = typeof(Rates);
-        var properties = type.GetRuntimeFields();
-
-        foreach (var property in properties)
+        private void ConvertRates()
         {
-            var code = property.Name.Substring(1, 3);
-            Rates.Add(new Rate
+            Rates.Clear();
+            var type = typeof(Rates);
+            var properties = type.GetRuntimeFields();
+
+            foreach (var property in properties)
             {
-                Code = code,
-                TaxRate = (double)property.GetValue(exchangeRates.Rates),
-            });
-        }
-
-
-    }
-
-    #endregion
-
-
-
-
-    #region Commands
-    public ICommand ConvertCommand
-        {
-            get
-            {
-                return new RelayCommand(ConvertMoney);
+                var code = property.Name.Substring(1, 3);
+                Rates.Add(new Rate
+                {
+                    Code = code,
+                    TaxRate = (double)property.GetValue(exchangeRates.Rates),
+                });
             }
+
+
         }
 
-         void ConvertMoney()
-        {
-            throw new NotImplementedException();
-        }
-        */
         #endregion
 
-    
+
+
     }
+
+
+    /*
+
+
+
+
+
+
+     #region Commands
+     public ICommand ConvertCommand
+         {
+             get
+             {
+                 return new RelayCommand(ConvertMoney);
+             }
+         }
+
+          void ConvertMoney()
+         {
+             throw new NotImplementedException();
+         }
+         */
+
+
+
+}
 
 

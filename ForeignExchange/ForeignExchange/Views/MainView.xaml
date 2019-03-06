@@ -58,7 +58,7 @@
             <Label
                 BackgroundColor="Silver"
                 VerticalOptions="FillAndExpand"
-                Text="{Binding Result,Mode=TwoWay}"
+                Text="{Binding Message}"
                 FontSize="Large"
                 Margin="0,10"
                 TextColor="Black"
